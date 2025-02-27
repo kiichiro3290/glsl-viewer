@@ -18,6 +18,10 @@
       {
         "command": "glsl-viewer.helloWorld",
         "title": "Hello World"
+      },
+      {
+        "command": "glsl-viewer.preview",
+        "title": "Preview Shader"
       }
     ]
   },

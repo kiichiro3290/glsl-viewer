@@ -1,14 +1,13 @@
-import { useEffect } from "react";
+import { useEffect } from 'react';
 
 export function App() {
   useEffect(() => {
-    window.addEventListener("message", (event) => {
-      const message = event.data;
-      console.log("message", message);
+    window.addEventListener('message', (event) => {
+      const _message = event.data;
     });
 
     return () => {
-      window.removeEventListener("message", () => {});
+      window.removeEventListener('message', () => {});
     };
   }, []);
 

@@ -11,23 +11,23 @@ const webpack = require('webpack');
 /** @type WebpackConfig */
 const baseConfig = {
   target: 'node',
-	mode: 'none',
-  entry: './src/extension.ts', 
+  mode: 'none',
+  entry: './src/extension.ts',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'extension.js',
-    libraryTarget: 'commonjs2'
+    libraryTarget: 'commonjs2',
   },
   externals: {
-    vscode: 'commonjs vscode'
+    vscode: 'commonjs vscode',
   },
   resolve: {
-    extensions: ['.ts', '.js', ".jsx", ".tsx"]
+    extensions: ['.ts', '.js', '.jsx', '.tsx'],
   },
   plugins: [
     new webpack.DefinePlugin({
-      "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV),
-    })
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+    }),
   ],
   module: {
     rules: [
@@ -36,44 +36,44 @@ const baseConfig = {
         exclude: /node_modules/,
         use: [
           {
-            loader: 'ts-loader'
-          }
-        ]
-      }
-    ]
+            loader: 'ts-loader',
+          },
+        ],
+      },
+    ],
   },
   devtool: 'nosources-source-map',
   infrastructureLogging: {
-    level: "log",
+    level: 'log',
   },
 };
 
 /** @type WebpackConfig */
 const extensionConfig = {
   ...baseConfig,
-  entry: "./src/extension.ts",
+  entry: './src/extension.ts',
   output: {
-    path: path.resolve(__dirname, "dist"),
-    filename: "extension.js",
-    libraryTarget: "commonjs2",
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'extension.js',
+    libraryTarget: 'commonjs2',
   },
   externals: {
-    vscode: "commonjs vscode",
+    vscode: 'commonjs vscode',
   },
 };
 
 /** @type WebpackConfig for JSX */
 const webviewConfig = {
   ...baseConfig,
-  target: ["web", "es2020"],
-  entry: "./src/index.tsx",
+  target: ['web', 'es2020'],
+  entry: './src/index.tsx',
   experiments: { outputModule: true },
   output: {
-    path: path.resolve(__dirname, "dist"),
-    filename: "webview.js",
-    libraryTarget: "module",
-    chunkFormat: "module",
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'webview.js',
+    libraryTarget: 'module',
+    chunkFormat: 'module',
   },
 };
 
-module.exports = [ extensionConfig, webviewConfig ];
+module.exports = [extensionConfig, webviewConfig];

@@ -1,6 +1,6 @@
-import * as vscode from "vscode";
-import { registerDisposable } from "./disposables";
-import { previewCommands } from "./commands/preview";
+import * as vscode from 'vscode';
+import { previewCommands } from './commands/preview';
+import { registerDisposable } from './disposables';
 
 export function registerCommands(context: vscode.ExtensionContext) {
   const command = previewCommands(context);

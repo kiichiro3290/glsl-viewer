@@ -27,39 +27,51 @@ const ShaderPlane = () => {
   const { size, viewport } = useThree();
   const [scale, setScale] = useState<[number, number, number]>([viewport.width, viewport.height, 1]);
   const [fragmentShader, setFragmentShader] = useState<string>(defaultFragmentShader);
+  const [material, setMaterial] = useState<THREE.ShaderMaterial | null>(null);
 
+  // 📌 シェーダーを変更するたびに新しいマテリアルを作成
   useEffect(() => {
-    window.addEventListener('message', (event) => {
-      const message = event.data;
-      if (message?.type === 'updateShader') {
-        console.log('updateShader', message.shader);
-        setFragmentShader(message.shader);
-      }
+    const newMaterial = new THREE.ShaderMaterial({
+      uniforms: {
+        uTime: { value: 0.0 },
+        uResolution: { value: new THREE.Vector2(viewport.width, viewport.height) },
+      },
+      vertexShader,
+      fragmentShader,
     });
 
-    return () => {
-      window.removeEventListener('message', () => {});
+    setMaterial(newMaterial);
+  }, [fragmentShader, viewport.width, viewport.height]);
+
+  // 📌 外部から送信される新しいシェーダーを適用
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      const message = event.data;
+      if (message?.type === 'updateShader') {
+        console.log('Shader updated:', message.shader);
+        setFragmentShader(message.shader);
+      }
     };
+
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
   }, []);
 
   useEffect(() => {
     setScale([viewport.width, viewport.height, 1]);
   }, [size, viewport]);
 
-  // フレームごとに `uTime` を更新
+  // 📌 `uTime` を毎フレーム更新
   useFrame(({ clock }) => {
-    if (ref.current) {
-      (ref.current.material as any).uniforms.uTime.value = clock.getElapsedTime();
+    if (material) {
+      material.uniforms.uTime.value = clock.getElapsedTime();
     }
   });
 
   return (
     <mesh ref={ref} scale={scale}>
       <planeGeometry args={[1, 1]} />
-      <shaderMaterial uniforms={{
-        uTime: { value: 0.0 },
-        uResolution: { value: new THREE.Vector2(viewport.width, viewport.height) },
-      }} fragmentShader={`${fragmentShader}`} vertexShader={`${vertexShader}`} />
+      {material && <primitive object={material} attach="material" />}
     </mesh>
   );
 };

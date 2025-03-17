@@ -1,9 +1,9 @@
 precision mediump float;
 
-uniform float u_time;
-uniform vec2 u_resolution;
+uniform float uTime;
+uniform vec2 uResolution;
 
 void main() {
-    vec2 uv = gl_FragCoord.xy / u_resolution.xy;
-    gl_FragColor = vec4(uv, abs(sin(u_time)), 1.0);
+    vec2 uv = gl_FragCoord.xy / uResolution.xy;
+    gl_FragColor = vec4(uv, abs(sin(uTime)), 1.0);
 }

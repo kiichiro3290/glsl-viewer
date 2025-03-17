@@ -4,7 +4,7 @@
   "description": "",
   "version": "0.0.1",
   "engines": {
-    "vscode": "^1.97.0"
+    "vscode": "^1.98.0"
   },
   "categories": [
     "Other"
@@ -26,13 +26,13 @@
     ]
   },
   "scripts": {
-    "vscode:prepublish": "pnpm package",
+    "vscode:prepublish": "pnpm compile",
     "compile": "webpack",
     "watch": "webpack --watch",
-    "package": "webpack --mode production --devtool hidden-source-map",
+    "package": "pnpm vsce package --no-dependencies",
     "compile-tests": "tsc -p . --outDir out",
     "watch-tests": "tsc -p . -w --outDir out",
-    "pretest": "pnpm compile-tests && pnpm compile && pnpm lint",
+    "pretest": "pnpm run compile-tests && npm run compile && npm run lint",
     "lint": "biome check .",
     "format": "biome check --write .",
     "test": "vscode-test"
@@ -43,9 +43,6 @@
     "@types/node": "20.x",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
-    "@types/vscode": "^1.97.0",
-    "@typescript-eslint/eslint-plugin": "^8.22.0",
-    "@typescript-eslint/parser": "^8.22.0",
     "@vscode/test-cli": "^0.0.10",
     "@vscode/test-electron": "^2.4.1",
     "eslint": "^9.19.0",
@@ -56,10 +53,12 @@
     "webpack-cli": "^6.0.1"
   },
   "dependencies": {
+    "@types/vscode": "^1.98.0",
     "@react-three/drei": "^10.0.4",
     "@react-three/fiber": "^9.1.0",
     "@types/three": "^0.174.0",
     "@vscode/vsce": "^3.2.2",
+    "leva": "^0.10.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "three": "^0.174.0"

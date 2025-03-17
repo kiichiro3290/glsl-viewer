@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
 import { registerDisposable } from '../disposables';
 
-export const previewCommands = (context: vscode.ExtensionContext) =>
-  vscode.commands.registerCommand('glsl-viewer.preview', () => {
+export function previewCommands (context: vscode.ExtensionContext) {
+  return vscode.commands.registerCommand('glsl-viewer.preview', () => {
     let panel: vscode.WebviewPanel | undefined = undefined;
 
     const editor = vscode.window.activeTextEditor;
@@ -61,14 +61,13 @@ export const previewCommands = (context: vscode.ExtensionContext) =>
 
     registerDisposable(changeSubscription);
   });
+}
 
 function getUri(
   webview: vscode.Webview,
-  extensionUri: vscode.Uri,
   filePath: string,
 ) {
-  const path = extensionUri.fsPath + filePath;
-  return webview.asWebviewUri(vscode.Uri.file(path));
+  return webview.asWebviewUri(vscode.Uri.file(filePath));
 }
 
 function getNonce() {
@@ -82,7 +81,7 @@ function getNonce() {
 }
 
 function getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri) {
-  const webviewUri = getUri(webview, extensionUri, '/dist/webview.js');
+  const webviewUri = getUri(webview, `${extensionUri.fsPath}/dist/webview.js`);
 
   const nonce = getNonce();
 
@@ -91,10 +90,29 @@ function getWebviewContent(webview: vscode.Webview, extensionUri: vscode.Uri) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cat Coding</title>
+    <title>WebView</title>
+    <style>
+      /* ✅ Webview を全画面に拡張 */
+      html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+      }
+
+      /* ✅ div#app を全画面に */
+      #app {
+        width: 100vw;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #000; /* 例: 背景色を黒に */
+      }
+    </style>
 </head>
 <body>
-<div>Hello</div>
   <div id="app"></div>
   <script type="module" nonce="${nonce}" src="${webviewUri}"></script>
 </body>

@@ -44,12 +44,28 @@ const ShaderPlane = () => {
         uResolution: {
           value: new THREE.Vector2(viewport.width, viewport.height),
         },
+        uMouse: { value: new THREE.Vector2(0, 0) },
       },
       vertexShader,
       fragmentShader,
     });
 
     setMaterial(newMaterial);
+
+    const handleMouseMove = (event: PointerEvent) => {
+      if (!newMaterial.uniforms.uMouse) return;
+      const { clientX, clientY } = event;
+      newMaterial.uniforms.uMouse.value.set(
+        clientX / window.innerWidth,
+        1.0 - clientY / window.innerHeight,
+      );
+    };
+
+    window.addEventListener('pointermove', handleMouseMove);
+
+    return () => {
+      window.removeEventListener('pointermove', handleMouseMove);
+    };
   }, [fragmentShader, viewport.width, viewport.height]);
 
   // 📌 外部から送信される新しいシェーダーを適用
